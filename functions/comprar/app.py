@@ -99,7 +99,7 @@ def handler(event, context):
         cursor.close()
 
         return response(201, {
-            "mensaje": "🎟️ ¡Compra exitosa!",
+            "mensaje": "¡Compra exitosa!",
             "ticket": {
                 "folio": folio,
                 "evento": asiento["evento_nombre"],
