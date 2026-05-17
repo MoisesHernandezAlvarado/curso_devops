@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  🎟️ Boletera Serverless — Demo para taller universitario
+  Lambda + API Gateway + RDS PostgreSQL
+
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 128
+    Runtime: python3.12
+    Environment:
+      Variables:
+        DB_HOST: !Ref DBHost
+        DB_NAME: !Ref DBName
+        DB_USER: !Ref DBUser
+        DB_PASSWORD: !Ref DBPassword
+
+Parameters:
+  DBHost:
+    Type: String
+    Description: Host de RDS PostgreSQL
+  DBName:
+    Type: String
+    Default: boletera
+  DBUser:
+    Type: String
+    Default: admin
+  DBPassword:
+    Type: String
+    NoEcho: true
+
+Resources:
+
+  # --- LAMBDA: Consultar disponibilidad ---
+  DisponibilidadFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: boletera-disponibilidad
+      CodeUri: functions/disponibilidad/
+      Handler: app.handler
+      Description: Consulta los asientos disponibles para un evento
+      Events:
+        DisponibilidadApi:
+          Type: Api
+          Properties:
+            Path: /eventos/{evento_id}/disponibilidad
+            Method: GET
+
+  # --- LAMBDA: Comprar ticket ---
+  ComprarFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: boletera-comprar
+      CodeUri: functions/comprar/
+      Handler: app.handler
+      Description: Reserva y compra un asiento para un evento
+      Events:
+        ComprarApi:
+          Type: Api
+          Properties:
+            Path: /eventos/{evento_id}/comprar
+            Method: POST
+
+Outputs:
+  ApiUrl:
+    Description: URL base de la API
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
