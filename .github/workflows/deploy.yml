@@ -28,7 +28,7 @@ jobs:
           pip install pytest psycopg2-binary
 
       - name: Correr tests
-        run: pytest tests/ -v
+        run: PYTHONPATH=. pytest tests/ -v
 
   # ================================
   # JOB 2: Deploy (solo en main)
