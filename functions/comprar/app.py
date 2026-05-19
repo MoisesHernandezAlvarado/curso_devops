@@ -69,6 +69,8 @@ def handler(event, context):
         if not asiento:
             return response(404, {"error": "Asiento no encontrado"})
 
+        print(asiento)
+        
         if asiento["estado"] != "disponible":
             return response(409, {
                 "error": "Lo sentimos, ese asiento ya fue comprado 😔",
